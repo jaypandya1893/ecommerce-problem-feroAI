@@ -4,9 +4,13 @@ from order_item.models import OrderItem
 from .models import Order
 from .serializers import OrderSerializer
 from rest_framework import viewsets
+from rest_framework.response import Response
+from rest_framework import status
 from rest_framework import filters
 from django_filters.rest_framework import DjangoFilterBackend
+
 # Create your views here.
+
 class OrderViewSet(viewsets.ModelViewSet):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
@@ -23,3 +27,9 @@ class OrderViewSet(viewsets.ModelViewSet):
             customer_list = customers.split(',')
             queryset = queryset.filter(customer__name__in=customer_list)            
         return queryset
+    
+    def list(self, request, *args, **kwargs):
+        response = super().list(request, *args, **kwargs)
+        filtered_response = list(filter(None, response.data))
+        
+        return Response(filtered_response, status=response.status_code)

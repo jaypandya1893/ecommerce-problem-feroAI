@@ -18,9 +18,10 @@ class OrderSerializer(serializers.ModelSerializer):
         if products:
             product_list = products.split(',')
             filtered_order_items = instance.order_items.filter(product__name__in=product_list)
-            representation['order_items'] = OrderItemSerializer(filtered_order_items, many=True).data
-
-        return representation
+            if filtered_order_items.exists():
+                representation['order_items'] = OrderItemSerializer(filtered_order_items, many=True).data
+                return representation
+        return None
     
     def validate_order_date(self, value):
         if value < timezone.now().date():
