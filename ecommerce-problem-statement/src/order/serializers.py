@@ -27,7 +27,7 @@ class OrderSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Order Date cannot be in the past.")
         return value
     
-    def validate_orders(self, data):
+    def validate_order_items(self, data):
         """
         Validate the cumulative weight of the order.
         """
